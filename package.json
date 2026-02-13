@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbo",
-    "build": "prisma generate && next build",
+    "build": "prisma generate && npx next build || npx next build --legacy-peer-deps",
     "start": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate"
@@ -43,7 +43,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "1.1.1",
-    "date-fns": "4.1.0",
+    "date-fns": "^3.6.0",
     "embla-carousel-react": "8.5.1",
     "input-otp": "1.4.1",
     "lucide-react": "^0.544.0",
