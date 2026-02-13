@@ -15,6 +15,12 @@ export function startAutomationService() {
 
     console.log('[Automation] Starting background service...')
 
+    // Safety check for missing DATABASE_URL
+    if (!process.env.DATABASE_URL) {
+        console.warn('[Automation] Warning: DATABASE_URL is missing. Automation service will wait for configuration.')
+        return
+    }
+
     // Initial run
     runAutomationTasks().then(res => {
         if (res.success) {
