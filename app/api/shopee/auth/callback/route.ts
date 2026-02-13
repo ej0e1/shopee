@@ -89,7 +89,7 @@ export async function GET(request: NextRequest) {
 
         // Redirect back to the Shopee integration page
         const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
-        return NextResponse.redirect(`${appUrl}/shopee`)
+        return NextResponse.redirect(`${appUrl}`)
     } catch (err) {
         console.error("[Shopee OAuth] Token exchange failed:", err)
         return NextResponse.json(
