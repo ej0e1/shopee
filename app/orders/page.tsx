@@ -1,5 +1,6 @@
 "use client"
 
+import { Suspense } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { AdminLayout } from "@/components/admin/admin-layout"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -8,7 +9,7 @@ import { LazadaOrdersPlaceholder } from "@/components/admin/orders/lazada-orders
 import { TikTokOrdersPlaceholder } from "@/components/admin/orders/tiktok-orders-placeholder"
 import { cn } from "@/lib/utils"
 
-export default function OrdersPage() {
+function OrdersContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
 
@@ -21,54 +22,66 @@ export default function OrdersPage() {
   }
 
   return (
-    <AdminLayout>
-      <div className="flex flex-col gap-6">
-        {/* Marketplace Selection Tabs */}
-        <div className="flex items-center justify-start border-b border-border pb-0">
-          <Tabs
-            value={activeMarketplace}
-            onValueChange={setActiveMarketplace}
-            className="w-full"
-          >
-            <TabsList className="h-12 w-full justify-start rounded-none bg-transparent p-0">
-              <TabsTrigger
-                value="shopee"
-                className={cn(
-                  "relative h-12 rounded-none border-b-2 border-transparent bg-transparent px-6 pb-3 pt-2 text-sm font-medium text-muted-foreground shadow-none transition-none",
-                  "data-[state=active]:border-b-orange-500 data-[state=active]:bg-transparent data-[state=active]:text-orange-600 data-[state=active]:shadow-none"
-                )}
-              >
-                Shopee
-              </TabsTrigger>
-              <TabsTrigger
-                value="lazada"
-                className={cn(
-                  "relative h-12 rounded-none border-b-2 border-transparent bg-transparent px-6 pb-3 pt-2 text-sm font-medium text-muted-foreground shadow-none transition-none",
-                  "data-[state=active]:border-b-purple-500 data-[state=active]:bg-transparent data-[state=active]:text-purple-600 data-[state=active]:shadow-none"
-                )}
-              >
-                Lazada
-              </TabsTrigger>
-              <TabsTrigger
-                value="tiktok"
-                className={cn(
-                  "relative h-12 rounded-none border-b-2 border-transparent bg-transparent px-6 pb-3 pt-2 text-sm font-medium text-muted-foreground shadow-none transition-none",
-                  "data-[state=active]:border-b-red-500 data-[state=active]:bg-transparent data-[state=active]:text-red-600 data-[state=active]:shadow-none"
-                )}
-              >
-                TikTok Shop
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
-        </div>
-
-        {/* Conditional Rendering */}
-        <div className="mt-2">
-          {activeMarketplace === "shopee" && <ShopeeOrdersTable />}
-          {activeMarketplace === "lazada" && <LazadaOrdersPlaceholder />}
-          {activeMarketplace === "tiktok" && <TikTokOrdersPlaceholder />}
-        </div>
+    <div className="flex flex-col gap-6">
+      {/* Marketplace Selection Tabs */}
+      <div className="flex items-center justify-start border-b border-border pb-0">
+        <Tabs
+          value={activeMarketplace}
+          onValueChange={setActiveMarketplace}
+          className="w-full"
+        >
+          <TabsList className="h-12 w-full justify-start rounded-none bg-transparent p-0">
+            <TabsTrigger
+              value="shopee"
+              className={cn(
+                "relative h-12 rounded-none border-b-2 border-transparent bg-transparent px-6 pb-3 pt-2 text-sm font-medium text-muted-foreground shadow-none transition-none",
+                "data-[state=active]:border-b-orange-500 data-[state=active]:bg-transparent data-[state=active]:text-orange-600 data-[state=active]:shadow-none"
+              )}
+            >
+              Shopee
+            </TabsTrigger>
+            <TabsTrigger
+              value="lazada"
+              className={cn(
+                "relative h-12 rounded-none border-b-2 border-transparent bg-transparent px-6 pb-3 pt-2 text-sm font-medium text-muted-foreground shadow-none transition-none",
+                "data-[state=active]:border-b-purple-500 data-[state=active]:bg-transparent data-[state=active]:text-purple-600 data-[state=active]:shadow-none"
+              )}
+            >
+              Lazada
+            </TabsTrigger>
+            <TabsTrigger
+              value="tiktok"
+              className={cn(
+                "relative h-12 rounded-none border-b-2 border-transparent bg-transparent px-6 pb-3 pt-2 text-sm font-medium text-muted-foreground shadow-none transition-none",
+                "data-[state=active]:border-b-red-500 data-[state=active]:bg-transparent data-[state=active]:text-red-600 data-[state=active]:shadow-none"
+              )}
+            >
+              TikTok Shop
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
       </div>
+
+      {/* Conditional Rendering */}
+      <div className="mt-2">
+        {activeMarketplace === "shopee" && <ShopeeOrdersTable />}
+        {activeMarketplace === "lazada" && <LazadaOrdersPlaceholder />}
+        {activeMarketplace === "tiktok" && <TikTokOrdersPlaceholder />}
+      </div>
+    </div>
+  )
+}
+
+export default function OrdersPage() {
+  return (
+    <AdminLayout>
+      <Suspense fallback={
+        <div className="flex h-[400px] w-full items-center justify-center">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+        </div>
+      }>
+        <OrdersContent />
+      </Suspense>
     </AdminLayout>
   )
 }
