@@ -8,14 +8,14 @@ datasource db {
 }
 
 model AutomationSetting {
-  id        String    @id
+  id        String    @id @default(cuid())
   enabled   Boolean   @default(false)
-  updatedAt DateTime
+  updatedAt DateTime  @updatedAt
   lastRunAt DateTime?
 }
 
 model Product {
-  id           String    @id
+  id           String    @id @default(cuid())
   shopeeItemId String    @unique
   name         String
   sku          String?
@@ -23,14 +23,14 @@ model Product {
   price        Decimal   @default(0)
   status       String    @default("NORMAL")
   shopId       String
-  updatedAt    DateTime
+  updatedAt    DateTime  @updatedAt
   isAutoBump   Boolean   @default(false)
   lastBumpedAt DateTime?
   variants     Json?
 }
 
 model ShopeeOrder {
-  id           String   @id
+  id           String   @id @default(cuid())
   shopId       Int
   orderSn      String   @unique
   buyerName    String?
@@ -39,31 +39,31 @@ model ShopeeOrder {
   createTime   DateTime
   raw          Json?
   createdAt    DateTime @default(now())
-  updatedAt    DateTime
+  updatedAt    DateTime @updatedAt
   productNames String?
 }
 
 model ShopeeToken {
-  id           String   @id
+  id           String   @id @default(cuid())
   shopId       String   @unique
   shopName     String?
   accessToken  String
   refreshToken String
   expiresAt    DateTime
   createdAt    DateTime @default(now())
-  updatedAt    DateTime
+  updatedAt    DateTime @updatedAt
 }
 
 model UserProfile {
-  id          String   @id
+  id          String   @id @default(cuid())
   name        String
   role        String   @default("Seller Pro")
   totalEarned Float    @default(0)
-  updatedAt   DateTime
+  updatedAt   DateTime @updatedAt
 }
 
 model WalletTransaction {
-  id          String   @id
+  id          String   @id @default(cuid())
   date        DateTime @default(now())
   type        String
   source      String
@@ -71,5 +71,5 @@ model WalletTransaction {
   amount      Float
   status      String
   createdAt   DateTime @default(now())
-  updatedAt   DateTime
+  updatedAt   DateTime @updatedAt
 }
