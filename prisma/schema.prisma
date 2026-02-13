@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model AutomationSetting {
+  id        String    @id
+  enabled   Boolean   @default(false)
+  updatedAt DateTime
+  lastRunAt DateTime?
+}
+
+model Product {
+  id           String    @id
+  shopeeItemId String    @unique
+  name         String
+  sku          String?
+  stock        Int       @default(0)
+  price        Decimal   @default(0)
+  status       String    @default("NORMAL")
+  shopId       String
+  updatedAt    DateTime
+  isAutoBump   Boolean   @default(false)
+  lastBumpedAt DateTime?
+  variants     Json?
+}
+
+model ShopeeOrder {
+  id           String   @id
+  shopId       Int
+  orderSn      String   @unique
+  buyerName    String?
+  totalAmount  Float
+  status       String
+  createTime   DateTime
+  raw          Json?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime
+  productNames String?
+}
+
+model ShopeeToken {
+  id           String   @id
+  shopId       String   @unique
+  shopName     String?
+  accessToken  String
+  refreshToken String
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime
+}
+
+model UserProfile {
+  id          String   @id
+  name        String
+  role        String   @default("Seller Pro")
+  totalEarned Float    @default(0)
+  updatedAt   DateTime
+}
+
+model WalletTransaction {
+  id          String   @id
+  date        DateTime @default(now())
+  type        String
+  source      String
+  referenceId String   @unique
+  amount      Float
+  status      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+}
