@@ -5,7 +5,10 @@ This project is optimized for deployment on [Railway](https://railway.app).
 ## Deployment Steps
 
 1. **Connect GitHub**: Create a new project on Railway and connect this repository: `ej0e1/shopee`.
-2. **Setup Variables**: Add the following Environment Variables in Railway:
+2. **Setup Database**: 
+   - Click **"New"** -> **"Database"** -> **"Add PostgreSQL"**.
+   - Railway will automatically add the `DATABASE_URL` variable to your main service once the database is provisioned.
+3. **Setup Variables**: Add the following Environment Variables in Railway settings for your web service:
    - `DATABASE_URL`: Add a MySQL or PostgreSQL service and let Railway provide this.
    - `SHOPEE_PARTNER_ID`: From Shopee Partner Console.
    - `SHOPEE_PARTNER_KEY`: From Shopee Partner Console.
