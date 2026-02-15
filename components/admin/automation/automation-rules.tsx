@@ -38,32 +38,6 @@ const defaultCategories: RuleCategory[] = [
     ],
   },
   {
-    label: "Wallet Automation",
-    description: "Automate wallet operations based on order events.",
-    rules: [
-      {
-        id: "auto-hold",
-        title: "Auto-hold wallet on Shopee order paid",
-        description:
-          "Automatically hold the order amount in the seller wallet when a Shopee order is marked as paid.",
-        enabled: true,
-        icon: Wallet,
-        iconBg: "bg-warning/10",
-        iconColor: "text-warning",
-      },
-      {
-        id: "auto-release",
-        title: "Auto-release wallet on order completed",
-        description:
-          "Automatically release held funds back to available balance when a Shopee order is marked as completed.",
-        enabled: true,
-        icon: ShoppingBag,
-        iconBg: "bg-success/10",
-        iconColor: "text-success",
-      },
-    ],
-  },
-  {
     label: "Sync Automation",
     description: "Keep your data synchronized with Shopee automatically.",
     rules: [
