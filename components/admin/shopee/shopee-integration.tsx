@@ -54,6 +54,16 @@ export function ShopeeIntegration() {
   }
 
   const handleDisconnect = async () => {
+    const confirmed = window.confirm(
+      "Are you sure you want to disconnect your Shopee account?\n\n" +
+      "This will permanently remove all synced data including:\n" +
+      "• Products\n" +
+      "• Orders\n" +
+      "• Wallet transactions\n\n" +
+      "Your internal account will be kept. You can reconnect anytime."
+    )
+    if (!confirmed) return
+
     setDisconnecting(true)
     try {
       const res = await fetch("/api/shopee/disconnect", { method: "POST" })

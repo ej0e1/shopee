@@ -87,6 +87,33 @@ export async function GET(request: NextRequest) {
 
         console.log("[Shopee OAuth] Token saved successfully")
 
+        // Trigger full data resync after reconnection
+        console.log("[Shopee OAuth] Starting post-connect data sync...")
+        const { syncProducts, syncOrders, syncWallet } = await import("@/lib/shopee/sync-logic")
+
+        try {
+            const productResult = await syncProducts()
+            console.log("[Shopee OAuth] Product sync complete:", productResult)
+        } catch (err) {
+            console.error("[Shopee OAuth] Product sync failed (non-blocking):", err)
+        }
+
+        try {
+            const orderResult = await syncOrders()
+            console.log("[Shopee OAuth] Order sync complete:", orderResult)
+        } catch (err) {
+            console.error("[Shopee OAuth] Order sync failed (non-blocking):", err)
+        }
+
+        try {
+            const walletResult = await syncWallet()
+            console.log("[Shopee OAuth] Wallet sync complete:", walletResult)
+        } catch (err) {
+            console.error("[Shopee OAuth] Wallet sync failed (non-blocking):", err)
+        }
+
+        console.log("[Shopee OAuth] Post-connect sync finished, redirecting...")
+
         // Redirect back to the Shopee integration page
         const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
         return NextResponse.redirect(`${appUrl}`)
