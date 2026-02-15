@@ -4,8 +4,18 @@ import { cn } from "@/lib/utils"
 import { SidebarNav } from "@/components/admin/sidebar-nav"
 import { Topbar } from "@/components/admin/topbar"
 
+import { useIsMobile } from "@/components/ui/use-mobile"
+
 export function AdminLayout({ children }: { children: React.ReactNode }) {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
+  const isMobile = useIsMobile()
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+
+  // Set initial state once isMobile is determined
+  React.useEffect(() => {
+    if (isMobile !== undefined) {
+      setIsSidebarOpen(!isMobile)
+    }
+  }, [isMobile])
 
   React.useEffect(() => {
     const runAutomation = async () => {
@@ -29,7 +39,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
       <div
         className={cn(
           "flex flex-1 flex-col transition-all duration-300 ease-in-out",
-          isSidebarOpen ? "pl-64" : "pl-0"
+          isSidebarOpen ? "md:pl-64" : "pl-0"
         )}
       >
         <Topbar onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} isSidebarOpen={isSidebarOpen} />

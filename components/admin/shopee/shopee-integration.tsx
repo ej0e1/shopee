@@ -15,8 +15,19 @@ import {
   Clock,
   Hash,
   Loader2,
+  AlertTriangle,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 
 interface ConnectionStatus {
   connected: boolean
@@ -28,6 +39,7 @@ export function ShopeeIntegration() {
   const [status, setStatus] = useState<ConnectionStatus | null>(null)
   const [loading, setLoading] = useState(true)
   const [disconnecting, setDisconnecting] = useState(false)
+  const [showDisconnectConfirm, setShowDisconnectConfirm] = useState(false)
   const [syncing, setSyncing] = useState<string | null>(null)
 
   const checkConnection = useCallback(async () => {
@@ -54,16 +66,7 @@ export function ShopeeIntegration() {
   }
 
   const handleDisconnect = async () => {
-    const confirmed = window.confirm(
-      "Are you sure you want to disconnect your Shopee account?\n\n" +
-      "This will permanently remove all synced data including:\n" +
-      "• Products\n" +
-      "• Orders\n" +
-      "• Wallet transactions\n\n" +
-      "Your internal account will be kept. You can reconnect anytime."
-    )
-    if (!confirmed) return
-
+    setShowDisconnectConfirm(false)
     setDisconnecting(true)
     try {
       const res = await fetch("/api/shopee/disconnect", { method: "POST" })
@@ -167,7 +170,7 @@ export function ShopeeIntegration() {
                 <Button
                   variant="outline"
                   className="w-full"
-                  onClick={handleDisconnect}
+                  onClick={() => setShowDisconnectConfirm(true)}
                   disabled={disconnecting}
                   type="button"
                 >
@@ -243,7 +246,7 @@ export function ShopeeIntegration() {
                         Shop ID
                       </p>
                       <p className="mt-1 font-mono text-sm font-semibold text-foreground">
-                        {status?.shop_id || "—"}
+                        {status?.shopId || "—"}
                       </p>
                     </div>
                   </div>
@@ -330,6 +333,47 @@ export function ShopeeIntegration() {
           </CardContent>
         </Card>
       </div>
+
+      <AlertDialog open={showDisconnectConfirm} onOpenChange={setShowDisconnectConfirm}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <div className="flex items-center gap-3 text-destructive mb-2">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-destructive/10">
+                <AlertTriangle className="h-6 w-6" />
+              </div>
+              <AlertDialogTitle>Disconnect Shopee Account?</AlertDialogTitle>
+            </div>
+            <AlertDialogDescription className="text-sm leading-relaxed">
+              This will permanently remove all synced data from your local dashboard, including:
+              <ul className="mt-2 list-disc list-inside space-y-1 font-medium text-foreground">
+                <li>Synced Products & Variants</li>
+                <li>Order History & Sync Status</li>
+                <li>Wallet Transaction Records</li>
+              </ul>
+              <p className="mt-3">
+                Your Shopee Seller account itself will remain intact. You can reconnect at any time to resync your data.
+              </p>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={disconnecting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => {
+                e.preventDefault()
+                handleDisconnect()
+              }}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              disabled={disconnecting}
+            >
+              {disconnecting ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                "Yes, Disconnect"
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }
